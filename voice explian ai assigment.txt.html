@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>AI Voice Hindi Project</title>
+
+<style>
+body {
+  font-family: Arial;
+  background-color: #f0f0f0;
+  text-align: center;
+}
+
+.container {
+  background: white;
+  padding: 20px;
+  margin: 50px auto;
+  width: 60%;
+  border-radius: 10px;
+}
+
+button {
+  padding: 10px 20px;
+  margin: 10px;
+  cursor: pointer;
+}
+
+code {
+  display: block;
+  background: #222;
+  color: #0f0;
+  padding: 10px;
+  margin-top: 10px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>AI Voice Hindi Coding Demo</h1>
+
+<p id="text">नीचे दिए गए बटन पर क्लिक करें</p>
+
+<button onclick="speakText('HTML वेब पेज का ढांचा बनाता है')">HTML</button>
+<button onclick="speakText('CSS वेब पेज को सुंदर और डिजाइन करता है')">CSS</button>
+<button onclick="speakText('JavaScript वेब पेज को काम करने लायक बनाता है')">JavaScript</button>
+
+<code id="codeBox">यहाँ कोड दिखाई देगा...</code>
+
+</div>
+
+<script>
+
+function speakText(message) {
+  let speech = new SpeechSynthesisUtterance(message);
+  speech.lang = "hi-IN"; // Hindi voice
+
+  window.speechSynthesis.speak(speech);
+
+  document.getElementById("text").innerHTML = message;
+
+  if(message.includes("HTML")) {
+    document.getElementById("codeBox").innerText = "<h1>Hello Aman</h1>";
+  } else if(message.includes("CSS")) {
+    document.getElementById("codeBox").innerText = "h1 { color: blue; }";
+  } else {
+    document.getElementById("codeBox").innerText = "alert('Hello Aman');";
+  }
+}
+
+</script>
+
+</body>
+</html>
