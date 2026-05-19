@@ -1,73 +1,213 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>AI Voice Hindi Project</title>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+    content="width=device-width, initial-scale=1.0">
 
-<style>
-body {
-  font-family: Arial;
-  background-color: #f0f0f0;
-  text-align: center;
-}
+    <title>India Weather App</title>
 
-.container {
-  background: white;
-  padding: 20px;
-  margin: 50px auto;
-  width: 60%;
-  border-radius: 10px;
-}
+    <style>
 
-button {
-  padding: 10px 20px;
-  margin: 10px;
-  cursor: pointer;
-}
+        body{
+            margin: 0;
+            padding: 0;
+            font-family: Arial;
+            background: linear-gradient(to right, #141e30, #243b55);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-code {
-  display: block;
-  background: #222;
-  color: #0f0;
-  padding: 10px;
-  margin-top: 10px;
-}
-</style>
+        .box{
+            width: 380px;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0px 0px 20px rgba(0,0,0,0.4);
+        }
+
+        h1{
+            color: #243b55;
+        }
+
+        input{
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 2px solid #243b55;
+            box-sizing: border-box;
+        }
+
+        button{
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            background: #243b55;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover{
+            background: #141e30;
+        }
+
+        #result{
+            margin-top: 25px;
+        }
+
+        .card{
+            background: #f2f2f2;
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .temp{
+            font-size: 50px;
+            color: darkblue;
+            font-weight: bold;
+        }
+
+        .weather{
+            font-size: 24px;
+            margin: 10px 0;
+        }
+
+        p{
+            font-size: 18px;
+        }
+
+    </style>
 
 </head>
 
 <body>
 
-<div class="container">
+<div class="box">
 
-<h1>AI Voice Hindi Coding Demo</h1>
+    <h1>🌦 Weather App</h1>
 
-<p id="text">नीचे दिए गए बटन पर क्लिक करें</p>
+    <input type="text"
+    id="city"
+    placeholder="Enter City">
 
-<button onclick="speakText('HTML वेब पेज का ढांचा बनाता है')">HTML</button>
-<button onclick="speakText('CSS वेब पेज को सुंदर और डिजाइन करता है')">CSS</button>
-<button onclick="speakText('JavaScript वेब पेज को काम करने लायक बनाता है')">JavaScript</button>
+    <button onclick="getWeather()">
+        Check Weather
+    </button>
 
-<code id="codeBox">यहाँ कोड दिखाई देगा...</code>
+    <div id="result"></div>
 
 </div>
 
 <script>
 
-function speakText(message) {
-  let speech = new SpeechSynthesisUtterance(message);
-  speech.lang = "hi-IN"; // Hindi voice
+async function getWeather(){
 
-  window.speechSynthesis.speak(speech);
+    let city =
+    document.getElementById("city").value;
 
-  document.getElementById("text").innerHTML = message;
+    if(city == ""){
 
-  if(message.includes("HTML")) {
-    document.getElementById("codeBox").innerText = "<h1>Hello Aman</h1>";
-  } else if(message.includes("CSS")) {
-    document.getElementById("codeBox").innerText = "h1 { color: blue; }";
-  } else {
-    document.getElementById("codeBox").innerText = "alert('Hello Aman');";
-  }
+        document.getElementById("result").innerHTML =
+        "❌ Please Enter City Name";
+
+        return;
+    }
+
+    // REAL WEATHER DATA
+    let url =
+    `https://wttr.in/${city}?format=j1`;
+
+    try{
+
+        let response =
+        await fetch(url);
+
+        let data =
+        await response.json();
+
+        let temp =
+        data.current_condition[0].temp_C;
+
+        let weather =
+        data.current_condition[0]
+        .weatherDesc[0].value;
+
+        let humidity =
+        data.current_condition[0]
+        .humidity;
+
+        let wind =
+        data.current_condition[0]
+        .windspeedKmph;
+
+        let feels =
+        data.current_condition[0]
+        .FeelsLikeC;
+
+        let time =
+        new Date().toLocaleTimeString();
+
+        let emoji = "☀";
+
+        if(weather.includes("Cloud")){
+            emoji = "☁";
+        }
+
+        else if(weather.includes("Rain")){
+            emoji = "🌧";
+        }
+
+        else if(weather.includes("Mist")){
+            emoji = "🌫";
+        }
+
+        else if(weather.includes("Thunder")){
+            emoji = "⛈";
+        }
+
+        document.getElementById("result").innerHTML = `
+
+        <div class="card">
+
+            <h2>📍 ${city}</h2>
+
+            <div class="temp">
+                ${temp}°C
+            </div>
+
+            <div class="weather">
+                ${emoji} ${weather}
+            </div>
+
+            <p>🤗 Feels Like : ${feels}°C</p>
+
+            <p>💧 Humidity : ${humidity}%</p>
+
+            <p>🌬 Wind Speed : ${wind} km/h</p>
+
+            <p>🕒 Time : ${time}</p>
+
+        </div>
+
+        `;
+
+    }
+
+    catch(error){
+
+        document.getElementById("result").innerHTML =
+        "❌ City Not Found";
+
+    }
+
 }
 
 </script>
